@@ -113,7 +113,7 @@ export default function PredictCard() {
 
       if (value === null || value === undefined || value === 0) {
         errors[field.name] = `${field.label} is required`;
-      } else if (value < field.min || value > field.max) {
+      } else if (typeof value === "number" && (value < field.min || value > field.max)) {
         errors[field.name] = `${field.label} must be between ${field.min} and ${field.max} ${field.unit}`;
       }
     });
@@ -216,7 +216,7 @@ export default function PredictCard() {
                         min={field.min}
                         max={field.max}
                         placeholder={field.placeholder}
-                        value={formData[field.name as keyof FormData] || ""}
+                        value={  formData[field.name as keyof FormData] || ""}
                         onChange={handleChange}
                         className={`${
                           validationErrors[field.name] ? "border-red-500" : ""
