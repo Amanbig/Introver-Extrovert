@@ -31,7 +31,7 @@ export default function DataTable() {
   const [dataset, setDataset] = useState<InputData[]>([]);
 
   async function fetchDataset() {
-    const response = await axios.get(`/api/data?page=${page}&size=100`);
+    const response = await axios.get(`/api/dataset?page=${page}&size=100`);
     if (!response) {
       throw new Error("Failed to fetch dataset");
     }
