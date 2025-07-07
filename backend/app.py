@@ -9,7 +9,6 @@ import pandas as pd
 from fastapi import Query
 
 class PredictData(BaseModel):
-    Time_alone_spent: float
     Time_spent_Alone: float	
     Stage_fear: bool
     Social_event_attendance	:float
