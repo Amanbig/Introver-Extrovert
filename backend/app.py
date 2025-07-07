@@ -22,7 +22,7 @@ labels = [
     "Introvert"
 ]
 
-with open("./model/prediction.pkl", "rb") as f:
+with open("./model/model.pkl", "rb") as f:
     model = pkl.load(f)
 
 df = pd.read_csv("./dataset/personality_datasert.csv")
@@ -61,7 +61,7 @@ def get_csv(page: int = Query(1, ge=1), size: int = Query(10, ge=1, le=100)):
 
 @app.get("/notebook")
 def get_notebook():
-    with open("./notebook/cnn-based.ipynb", "r", encoding="utf-8") as f:
+    with open("./notebook/introvert-extrovert.ipynb", "r", encoding="utf-8") as f:
         notebook = nbformat.read(f, as_version=4)
     return notebook.dict()
 
@@ -72,4 +72,4 @@ def predict(data: PredictData):
 
     prediction = model.predict(input_data)
 
-    return {"prediction": labels[prediction]}
+    return {"prediction": labels[prediction[0]]}

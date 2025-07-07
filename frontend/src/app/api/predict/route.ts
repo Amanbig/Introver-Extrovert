@@ -15,6 +15,7 @@ interface InputData {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
+        console.log(body)
 
         // Validate required fields
         const requiredFields = ['Time_spent_Alone',
@@ -25,25 +26,6 @@ export async function POST(request: NextRequest) {
             'Friends_circle_size',
             'Post_frequency',
         ];
-
-        const missingFields = requiredFields.filter(field => !(field in body));
-
-        if (missingFields.length > 0) {
-            return NextResponse.json(
-                { error: `Missing required fields: ${missingFields.join(', ')}` },
-                { status: 400 }
-            );
-        }
-
-        // Validate that all fields are numbers
-        for (const field of requiredFields) {
-            if (typeof body[field] !== 'number' || isNaN(body[field])) {
-                return NextResponse.json(
-                    { error: `Field ${field} must be a valid number` },
-                    { status: 400 }
-                );
-            }
-        }
 
         const predictionData: InputData = {
             Time_spent_Alone: body.Time_spent_Alone,
