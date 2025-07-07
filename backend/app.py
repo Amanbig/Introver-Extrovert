@@ -5,6 +5,8 @@ import os
 import nbformat
 from pydantic import BaseModel
 import pickle as pkl
+import pandas as pd
+from fastapi import Query
 
 class PredictData(BaseModel):
     Time_alone_spent: float
@@ -24,6 +26,8 @@ labels = [
 with open("./model/prediction.pkl", "rb") as f:
     model = pkl.load(f)
 
+df = pd.read_csv("./dataset/personality_datasert.csv")
+
 
 app = FastAPI()
 
@@ -36,6 +40,24 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/data")
+def get_csv(page: int = Query(1, ge=1), size: int = Query(10, ge=1, le=100)):
+    
+    # Calculate start and end indices
+    start = (page - 1) * size
+    end = start + size
+
+    # Convert to list of dicts for JSON response
+    data = df.iloc[start:end].to_dict(orient="records")
+
+    return {
+        "page": page,
+        "size": size,
+        "total_records": len(df),
+        "total_pages": (len(df) + size - 1) // size,  # ceiling division
+        "data": data
+    }
 
 
 @app.get("/notebook")
