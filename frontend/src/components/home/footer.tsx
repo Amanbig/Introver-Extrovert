@@ -35,8 +35,10 @@ export default function Footer() {
             <h3 className="text-lg font-semibold text-white mb-4">Contact</h3>
             <p className="text-sm">
               Have questions? Reach out at{" "}
-              <a href="mailto:support@persona.ai" className="hover:text-blue-400 transition">
-                support@persona.ai
+              <a href="mailto:
+              amanpreetsinghjhiwant7@gmail.com
+              " className="hover:text-blue-400 transition">
+                amanpreetsinghjhiwant7@gmail.com
               </a>
             </p>
           </div>
