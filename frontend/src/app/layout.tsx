@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import Navbar from "@/components/home/menu";
+import Footer from "@/components/home/footer";
 
 export const metadata: Metadata = {
   title: "Persona AI",
@@ -23,7 +25,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <Navbar/>
         {children}
+        <Footer/>
         </ThemeProvider>
       </body>
     </html>

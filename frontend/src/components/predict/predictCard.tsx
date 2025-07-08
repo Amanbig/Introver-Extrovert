@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useCallback, useState } from "react";
-import { Loader2, Info } from "lucide-react";
+import { Loader2, Info, Users, User, Sparkles, CheckCircle } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -98,6 +98,20 @@ const INITIAL_FORM_DATA: FormData = {
   Post_frequency: 0,
 };
 
+const PERSONALITY_IMAGES = {
+  extrovert: "https://plus.unsplash.com/premium_photo-1681841110999-4f1e4c88e9c9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  introvert: "https://images.unsplash.com/photo-1460904577954-8fadb262612c?q=80&w=1690&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  ambivert: "https://images.unsplash.com/photo-1528701222226-756c361aa528?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+  default: "https://plus.unsplash.com/premium_photo-1681841110999-4f1e4c88e9c9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+};
+
+const PERSONALITY_DESCRIPTIONS = {
+  extrovert: "You are an extrovert! You thrive in social situations, gain energy from being around others, and tend to be outgoing and expressive. You enjoy being the center of attention and are comfortable in large groups.",
+  introvert: "You are an introvert! You prefer quiet, low-stimulus environments and often feel drained by social situations. You tend to be thoughtful, reflective, and prefer deep, meaningful conversations over small talk.",
+  ambivert: "You are an ambivert! You have a balanced mix of introverted and extroverted traits. You can adapt to different social situations and feel comfortable both in groups and alone, depending on the context.",
+  default: "Your personality type has been determined based on your responses to various social and behavioral questions."
+};
+
 export default function PredictCard() {
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
@@ -155,8 +169,7 @@ export default function PredictCard() {
     setPrediction(null);
 
     try {
-
-        console.log(formData)
+      console.log(formData)
       const response = await axios.post(
         `/api/predict`,
         formData,
@@ -178,9 +191,76 @@ export default function PredictCard() {
     setValidationErrors({});
   }, []);
 
+  const getPersonalityImage = (predictionType: string) => {
+    const type = predictionType.toLowerCase();
+    if (type.includes('extrovert')) return PERSONALITY_IMAGES.extrovert;
+    if (type.includes('introvert')) return PERSONALITY_IMAGES.introvert;
+    if (type.includes('ambivert')) return PERSONALITY_IMAGES.ambivert;
+    return PERSONALITY_IMAGES.default;
+  };
+
+  const getPersonalityDescription = (predictionType: string) => {
+    const type = predictionType.toLowerCase();
+    if (type.includes('extrovert')) return PERSONALITY_DESCRIPTIONS.extrovert;
+    if (type.includes('introvert')) return PERSONALITY_DESCRIPTIONS.introvert;
+    if (type.includes('ambivert')) return PERSONALITY_DESCRIPTIONS.ambivert;
+    return PERSONALITY_DESCRIPTIONS.default;
+  };
+
+  const getPersonalityIcon = (predictionType: string) => {
+    const type = predictionType.toLowerCase();
+    if (type.includes('extrovert')) return <Users className="h-8 w-8 text-blue-500" />;
+    if (type.includes('introvert')) return <User className="h-8 w-8 text-purple-500" />;
+    if (type.includes('ambivert')) return <Sparkles className="h-8 w-8 text-green-500" />;
+    return <CheckCircle className="h-8 w-8 text-gray-500" />;
+  };
+
   return (
     <TooltipProvider>
-      <div className="w-full max-w-3xl mx-auto p-4 sm:p-6">
+      <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
+        {/* Result Card - Show when prediction is available */}
+        {prediction && (
+          <Card className="shadow-lg border-2 border-green-200 bg-gradient-to-br dark:from-gray-800 dark:to-gray-900 from-green-50 to-blue-50">
+            <CardHeader>
+              <div className="flex items-center justify-center space-x-3">
+                {getPersonalityIcon(prediction.prediction)}
+                <CardTitle className="text-2xl text-center">Your Personality Type</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex flex-col md:flex-row gap-6 items-center">
+                <div className="flex-shrink-0">
+                  <img
+                    src={getPersonalityImage(prediction.prediction)}
+                    alt={`${prediction.prediction} personality type`}
+                    className="w-48 h-48 object-cover rounded-lg shadow-md"
+                  />
+                </div>
+                <div className="flex-1 space-y-4">
+                  <div className="text-center md:text-left">
+                    <h3 className="text-3xl font-bold text-gray-800 dark:text-gray-300 mb-2">
+                      {prediction.prediction}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+                      {getPersonalityDescription(prediction.prediction)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="flex justify-center">
+              <Button 
+                onClick={handleReset}
+                variant="outline"
+                className="px-6 py-2"
+              >
+                Take Assessment Again
+              </Button>
+            </CardFooter>
+          </Card>
+        )}
+
+        {/* Assessment Form */}
         <Card className="shadow-lg">
           <CardHeader className="space-y-2">
             <CardTitle className="text-2xl">Personality Assessment</CardTitle>
@@ -216,7 +296,7 @@ export default function PredictCard() {
                         min={field.min}
                         max={field.max}
                         placeholder={field.placeholder}
-                        value={  formData[field.name as keyof FormData] || ""}
+                        value={typeof formData === "number" && formData[field.name as keyof FormData] || ""}
                         onChange={handleChange}
                         className={`${
                           validationErrors[field.name] ? "border-red-500" : ""
@@ -264,17 +344,10 @@ export default function PredictCard() {
                 </div>
               </div>
 
-              {/* Alerts */}
+              {/* Error Alert */}
               {error && (
                 <Alert variant="destructive">
                   <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-              {prediction && (
-                <Alert className="border-green-500 bg-green-50">
-                  <AlertDescription className="text-green-700">
-                    <strong>Result:</strong> You are likely an {prediction.prediction}
-                  </AlertDescription>
                 </Alert>
               )}
             </form>
@@ -283,7 +356,7 @@ export default function PredictCard() {
             <Button
               type="submit"
               className="w-full sm:w-auto flex-1"
-              disabled={loading}
+              disabled={loading || !!prediction}
               onClick={handleSubmit}
             >
               {loading ? (
