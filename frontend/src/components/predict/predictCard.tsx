@@ -296,7 +296,7 @@ export default function PredictCard() {
                         min={field.min}
                         max={field.max}
                         placeholder={field.placeholder}
-                        value={typeof formData === "number" && formData[field.name as keyof FormData] || ""}
+                        value={String(formData[field.name as keyof FormData])}
                         onChange={handleChange}
                         className={`${
                           validationErrors[field.name] ? "border-red-500" : ""
