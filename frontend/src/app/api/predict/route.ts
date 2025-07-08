@@ -17,16 +17,6 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         console.log(body)
 
-        // Validate required fields
-        const requiredFields = ['Time_spent_Alone',
-            'Stage_fear',
-            'Social_event_attendance',
-            'Going_outside',
-            'Drained_after_socializing',
-            'Friends_circle_size',
-            'Post_frequency',
-        ];
-
         const predictionData: InputData = {
             Time_spent_Alone: body.Time_spent_Alone,
             Stage_fear: body.Stage_fear,
