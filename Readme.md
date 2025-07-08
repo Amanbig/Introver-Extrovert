@@ -5,7 +5,7 @@ A full-stack web application that predicts personality type (introvert, extrover
 ## Project Structure
 
 ```
-introandExtro/
+Introver-Extrovert/
 ├── backend/      # Python FastAPI backend, ML model, dataset
 ├── frontend/     # Next.js 14 frontend, UI components
 ```
@@ -21,10 +21,16 @@ introandExtro/
 
 1. Clone the repository:
    ```sh
-   git clone <repo-url>
-   cd introandExtro
+   git clone https://github.com/Amanbig/Introver-Extrovert
+   cd Introver-Extrovert
    ```
 2. See the `frontend/` and `backend/` folders for setup and usage.
+
+### Docker compose
+You could also run it directly using docker compose
+```bash
+docker compose up -d
+```
 
 ## License
 MIT
